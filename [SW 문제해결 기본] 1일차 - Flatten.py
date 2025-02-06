@@ -13,7 +13,7 @@ for tc in range(1, T + 1):
     '''
     max_idx_num = 0
     min_idx_num = 0
-    for i in range(dump_cnt + 1):
+    for i in range(dump_cnt):
         min_height = box_heights[-1]
         max_height = box_heights[0]
 
@@ -26,6 +26,8 @@ for tc in range(1, T + 1):
                 min_idx_num = j
         box_heights[max_idx_num] -= 1
         box_heights[min_idx_num] += 1
+        max_height = max(box_heights)
+        min_height = min(box_heights)
 
     print(f'#{tc} {max_height - min_height}')
 
