@@ -1,6 +1,6 @@
 import sys
 
-sys.stdin = open("sample_input.txt", "r")
+sys.stdin = open("../0211_String/sample_input.txt", "r")
 
 A = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 T = int(input())

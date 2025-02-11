@@ -1,6 +1,6 @@
 import sys
 
-sys.stdin = open('sample_input.txt', 'r')
+sys.stdin = open('../0211_String/sample_input.txt', 'r')
 
 def binary_search(P, target_page):
     # P: 총 페이지 수

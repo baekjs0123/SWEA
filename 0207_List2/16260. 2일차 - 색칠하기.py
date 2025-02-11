@@ -1,5 +1,5 @@
 import sys
-sys.stdin = open("sample_input.txt", "r")
+sys.stdin = open("../0211_String/sample_input.txt", "r")
 
 T = int(input())
 for tc in range(1, T + 1):

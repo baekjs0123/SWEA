@@ -1,7 +1,7 @@
 import sys
 import pprint
 
-sys.stdin = open('sample_input.txt', 'r')
+sys.stdin = open('../0211_String/sample_input.txt', 'r')
 
 for _ in range(10):
     T = int(input())
