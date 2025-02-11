@@ -1,10 +1,13 @@
+import sys
+
+sys.stdin = open('../sample_input.txt', 'r')
+
 def is_valid(r, c):
     """
     주어진 좌표 (r, c)가 사다리 범위 내에 있고,
     해당 위치에 사다리가 있는지 확인한다.
     """
     return 0 <= r < 100 and 0 <= c < 100 and ladder[r][c] == 1
-
 
 # 0:좌 => 1:우 => 2:상
 dr = [0, 0, -1]
