@@ -1,51 +1,69 @@
 import sys
-sys.stdin = open('input.txt', 'r')
+sys.stdin = open('sample_input.txt', 'r')
 
-def max_len_palindrome(row):
+def manacher(s):
     """
-    주어진 문자열(row)에서 모든 중심에 대해 회문(앞뒤로 읽어 동일한 문자열)을
-    한 번의 반복으로 검사하여 최대 회문 길이를 반환하는 함수입니다.
+    Manacher 알고리즘을 이용하여 문자열 s에서 최대 회문(앞뒤로 읽어 동일한 부분 문자열)의 길이를 구합니다.
+    전처리: s를 '^#'와 '#$'로 감싸고, 각 문자 사이에 '#'을 삽입하여 홀수/짝수 회문을 통일하여 처리합니다.
 
-    아이디어:
-      - 문자열의 모든 가능한 '중심'을 고려하면 총 (2*L - 1)개가 있습니다. 100개 기준 199개
-        (L은 row의 길이)
-      - center가 짝수이면 중심은 한 문자(홀수 길이 회문),
-        center가 홀수이면 중심은 두 문자 사이(짝수 길이 회문)로 설정합니다.
-      - 각 중심에서 좌우로 확장하면서 문자가 일치하는지 검사하고,
-        일치하는 동안 회문의 길이를 갱신합니다.
+    예시: s = "ABBA" 인 경우,
+         T = "^#A#B#B#A#$" 가 됩니다.
+
+    P[i]는 전처리된 문자열 T에서 인덱스 i를 중심으로 하는 회문의 반지름(중심 제외 좌우 확장된 길이)을 저장합니다.
+    최종적으로 max(P)는 원래 문자열에서의 최대 회문 길이를 의미합니다.
     """
-    L = len(row)  # 문자열의 길이
-    max_len = 0  # 현재까지 발견한 최대 회문 길이
+    # 전처리: 문자열 s를 특수문자로 감싸고, 각 문자 사이에 '#'을 삽입합니다.
+    T = '^#' + '#'.join(s) + '#$'
+    n = len(T)
+    P = [0] * n  # 각 인덱스에서의 회문 반지름을 저장할 배열
+    center = right = 0  # 현재 회문의 중심(center)과 오른쪽 경계(right)
 
-    # 0부터 2*L - 2까지 center를 순회 (총 2*L - 1개의 center)
-    for center in range(2 * L - 1):
-        # 중심을 기준으로 좌측 인덱스는 center//2
-        left = center // 2
-        # center가 홀수이면, 오른쪽 인덱스는 left + 1, 짝수이면 left와 동일
-        right = left + (center % 2)
+    # T[0]와 T[n-1]은 경계 문자이므로 1부터 n-2까지 탐색합니다.
+    for i in range(1, n - 1):
+        # i의 mirror (대칭 위치)는 2*center - i
+        mirror = 2 * center - i
 
-        # 좌우 인덱스가 범위 내에 있고, 두 문자가 일치하는 동안 확장합니다.
-        while left >= 0 and right < L and row[left] == row[right]:
-            current_len = right - left + 1  # 현재 회문의 길이 계산
-            if current_len > max_len:
-                max_len = current_len  # 최대 길이 갱신
-            left -= 1  # 왼쪽으로 한 칸 확장
-            right += 1  # 오른쪽으로 한 칸 확장
+        # 만약 i가 현재 팰린드롬의 오른쪽 경계 내에 있다면,
+        # 최소한 mirror의 값 또는 (right - i) 만큼은 팰린드롬이 형성됩니다.
+        if i < right:
+            P[i] = min(right - i, P[mirror])
 
-    return max_len
+        # i를 중심으로 팰린드롬을 좌우로 확장합니다.
+        while T[i + P[i] + 1] == T[i - P[i] - 1]:
+            P[i] += 1
 
+        # 만약 i + P[i]가 기존의 right보다 더 오른쪽으로 확장되었다면, center와 right를 업데이트합니다.
+        if i + P[i] > right:
+            center, right = i, i + P[i]
+
+    # P 배열에서 최대값을 구하면 전처리된 문자열 T에서의 최대 회문 반지름입니다.
+    # 전처리에서 삽입한 '#'들은 실제 문자 길이에 영향을 주지 않으므로,
+    # 최종적으로 max(P)가 원래 문자열에서의 최대 회문 길이가 됩니다.
+    return max(P)
+
+
+# 메인 코드: 10개의 테스트 케이스에 대해 100x100 격자판에서 행과 열 각각의 최대 회문 길이를 구합니다.
 for _ in range(10):
     tc = int(input())
+    # 100개의 줄을 입력받아 각 줄을 문자 리스트(길이 100)로 저장합니다.
     arr = [list(input().strip()) for _ in range(100)]
-    # zip(*)를 사용해 행렬을 전치하여, 각 열을 col_arr에 저장
+    # zip(*)를 사용하여 행렬 전치: 각 열을 튜플 형태로 col_arr에 저장합니다.
     col_arr = list(zip(*arr))
-    max_len_overall = 0  # 전체 격자판에서 발견한 최대 회문 길이를 저장할 변수
+
+    max_len_overall = 0  # 전체 격자판에서 발견한 최대 회문 길이
+
+    # 각 행과 각 열에 대해 최대 회문 길이를 구합니다.
     for i in range(100):
-        # i번째 행에서의 최대 회문 길이
-        row_max = max_len_palindrome(arr[i])
-        col_max = max_len_palindrome(col_arr[i])
-        # 두 값과 현재까지의 전체 최대값을 비교하여 갱신
+        # arr[i]는 문자 리스트이므로 ''.join(arr[i])로 문자열로 변환해도 좋습니다.
+        row_str = ''.join(arr[i])
+        row_max = manacher(row_str)
+
+        # col_arr[i]는 튜플이므로 ''.join(col_arr[i])로 문자열로 변환합니다.
+        col_str = ''.join(col_arr[i])
+        col_max = manacher(col_str)
+
+        # 두 값과 현재까지의 전체 최대값을 비교하여 갱신합니다.
         max_len_overall = max(max_len_overall, row_max, col_max)
 
-    # 결과 출력: 예시 형식에 맞춰 "#테스트케이스번호 최대회문길이" 형태로 출력
+    # 결과 출력: 테스트케이스 번호와 전체 최대 회문 길이를 출력합니다.
     print(f"#{tc} {max_len_overall}")
