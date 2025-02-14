@@ -1,22 +1,26 @@
 import sys
-
 sys.stdin = open('input.txt', 'r')
+
+def cnt_puzzle(N, K, puzzle):
+    ans = 0
+    cnt = 0
+    for i in range(N):
+        for j in range(N):
+            if puzzle[i][j] == 1:
+                cnt += 1
+            if puzzle[i][j] == 0 or j == N - 1:  # 0이거나 마지막 열이면 연속한 1의 개수 확인
+                if cnt == K:
+                    ans += 1
+                cnt = 0
+    return ans
 
 T = int(input())
 for tc in range(1, T + 1):
     N, K = map(int, input().split())
     puzzle = [list(map(int, input().split())) for _ in range(N)]
+    # 퍼즐을 전치시킨다
+    col_puzzle = list(zip(*puzzle))
+    # 함수를 활용하여 더해준다
+    result = cnt_puzzle(N, K, puzzle) + cnt_puzzle(N, K, col_puzzle)
 
-    '''
-    접근법
-    각 행, 열을 순회하며 칸이 흰색(요소의 값이 1일 때)인 경우를 모두 더한다.
-    모두 더한 값이 K와 일치하면 cnt += 1 을 한다.
-    '''
-    cnt = 0
-    for i in range(N):
-        for j in range(N):
-            is_valid = puzzle[i][j: j + K]
-            if 0 not in is_valid and len(is_valid) == K:
-                print(tc, puzzle[i][j: j + K])
-                cnt += 1
-    print(f'#{tc} {cnt}')
+    print(f'#{tc} {result}')
