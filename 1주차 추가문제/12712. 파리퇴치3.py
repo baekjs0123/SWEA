@@ -1,63 +1,75 @@
 import sys
-
 sys.stdin = open('input.txt', 'r')
 
-t_input = int(input())
+T = int(input())
+for tc in range(1, T + 1):
+    N, M = map(int, input().split())
+    arr = [list(map(int, input().split())) for _ in range(N)]
 
-for t in range(1, t_input + 1):
-    n, m = map(int, input().split())
-
-    field = [list(map(int, input().split())) for _ in range(n)]
-
-
-    def killfly_vertical(field, x, y, m):
-        '''
-        필드와 x,y 좌표, 스프레이 길이 m을 받아서
-        해당 좌표에서 상하좌우 m칸의 파리 킬수를 합산해서 리턴하는 함수
-        '''
-        kills = 0
-        directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
-        for dx, dy in directions:
-            for k in range(1, m):
-                nx = x + dx * k
-                ny = y + dy * k
-                if 0 <= nx < n and 0 <= ny < n:
-                    kills += field[nx][ny]
-
-        return kills + field[x][y]
+    dr = [0, 1, 0, -1]
+    dc = [1, 0 , -1, 0]
+    cnt = 0
+    for r in range(N):
+        for c in range(N):
+            for d in range(4):
+                for k in range(1, M):
+                    nr = r + dr[d]*k
+                    nc = c + dc[d]*k
+                    if 0 <= nr < N and 0 <= nc < N:
+                        cnt += arr[nr][nc]
+    print(cnt)
 
 
-    def killfly_diognal(field, x, y, m):
-        '''
-        필드와 x,y 좌표, 스프레이 길이 m을 받아서
-        해당 좌표에서 대각선 4방향 m칸의 파리 킬수를 합산해서 리턴하는 함수
-        '''
-        kills = 0
-        directions = [(1, 1), (-1, -1), (-1, 1), (1, -1)]
-        for dx, dy in directions:
-            for k in range(1, m):
-                nx = x + dx * k
-                ny = y + dy * k
-                if 0 <= nx < n and 0 <= ny < n:
-                    kills += field[nx][ny]
-
-        return kills + field[x][y]
 
 
-    kills_max = 0
-
-    for i in range(n):
-        for j in range(n):
-            kills_vertical = killfly_vertical(field, i, j, m)
-            kills_diagnol = killfly_vertical(field, i, j, m)
-
-            if kills_max < kills_vertical:
-                kills_max = kills_vertical
-
-            if kills_max < kills_diagnol:
-                kills_max = kills_diagnol
-
-    print(kills_max)
+    # def killfly_vertical(field, x, y, m):
+    #     '''
+    #     필드와 x,y 좌표, 스프레이 길이 m을 받아서
+    #     해당 좌표에서 상하좌우 m칸의 파리 킬수를 합산해서 리턴하는 함수
+    #     '''
+    #     kills = 0
+    #     directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+    #     for dx, dy in directions:
+    #         for k in range(1, m):
+    #             nx = x + dx * k
+    #             ny = y + dy * k
+    #             if 0 <= nx < n and 0 <= ny < n:
+    #                 kills += field[nx][ny]
+    #
+    #     return kills + field[x][y]
+    #
+    #
+    # def killfly_diognal(field, x, y, m):
+    #     '''
+    #     필드와 x,y 좌표, 스프레이 길이 m을 받아서
+    #     해당 좌표에서 대각선 4방향 m칸의 파리 킬수를 합산해서 리턴하는 함수
+    #     '''
+    #     kills = 0
+    #     directions = [(1, 1), (-1, -1), (-1, 1), (1, -1)]
+    #     for dx, dy in directions:
+    #         for k in range(1, m):
+    #             nx = x + dx * k
+    #             ny = y + dy * k
+    #             if 0 <= nx < n and 0 <= ny < n:
+    #                 kills += field[nx][ny]
+    #
+    #     return kills + field[x][y]
+    #
+    #
+    # kills_max = 0
+    #
+    # for i in range(n):
+    #     for j in range(n):
+    #         kills_vertical = killfly_vertical(field, i, j, m)
+    #         kills_diagnol = killfly_vertical(field, i, j, m)
+    #
+    #         if kills_max < kills_vertical:
+    #             kills_max = kills_vertical
+    #
+    #         if kills_max < kills_diagnol:
+    #             kills_max = kills_diagnol
+    #
+    # print(kills_max)
 
 # 특정 숫자(문자)의 위치찾기
 # pos = [(i,j) for i in range(세로) for j in range(가로) if arr[i][j] == "문자"]
