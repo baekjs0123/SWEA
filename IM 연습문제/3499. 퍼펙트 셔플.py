@@ -24,8 +24,7 @@ for tc in range(1, T + 1):
         new_deck.append(half_deck1[i])
         new_deck.append(half_deck2[i])
     # 홀수인 경우, 첫 번째 덱에 남은 마지막 카드를 추가
-    if len(half_deck1) > len(half_deck2):
+    if N % 2 == 1:
         new_deck.append(half_deck1[-1])
 
-    # 출력 형식에 맞춰 결과 출력
     print(f"#{tc} {' '.join(new_deck)}")

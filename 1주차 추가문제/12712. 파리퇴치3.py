@@ -1,23 +1,49 @@
 import sys
 sys.stdin = open('input.txt', 'r')
 
+def kill_vertical(i, j, M):
+    # + 형태로 스프레이를 분사하여 잡을 수 있는 파리 수를 계산하는 함수
+    directions = [[0, 1], [0, -1], [-1, 0], [1, 0]]  # 우, 좌, 상, 하 방향
+    sum_kill = arr[i][j]  # 현재 위치의 파리 수로 초기화
+
+    for di, dj in directions:
+        for k in range(1, M):
+            ni = i + di * k
+            nj = j + dj * k
+            if 0 <= ni < N and 0 <= nj < N:
+                sum_kill += arr[ni][nj]
+
+    return sum_kill
+
+def kill_diagonal(i, j, M):
+    # x 형태로 스프레이를 분사하여 잡을 수 있는 파리 수를 계산하는 함수
+    directions = [[-1, 1], [-1, -1], [1, 1], [1, -1]]  # 우상, 좌상, 우하, 좌하 방향
+    sum_kill = arr[i][j]  # 현재 위치의 파리 수로 초기화
+
+    for di, dj in directions:
+        for k in range(1, M):
+            ni = i + di * k
+            nj = j + dj * k
+            if 0 <= ni < N and 0 <= nj < N:
+                sum_kill += arr[ni][nj]
+
+    return sum_kill
+
 T = int(input())
 for tc in range(1, T + 1):
     N, M = map(int, input().split())
     arr = [list(map(int, input().split())) for _ in range(N)]
+    result = 0  # 최종 결과를 저장할 변수
 
-    dr = [0, 1, 0, -1]
-    dc = [1, 0 , -1, 0]
-    cnt = 0
-    for r in range(N):
-        for c in range(N):
-            for d in range(4):
-                for k in range(1, M):
-                    nr = r + dr[d]*k
-                    nc = c + dc[d]*k
-                    if 0 <= nr < N and 0 <= nc < N:
-                        cnt += arr[nr][nc]
-    print(cnt)
+    for i in range(N):
+        for j in range(N):
+            # 각 좌표에서 + 형태와 x 형태로 스프레이를 분사하여 잡을 수 있는 최대 파리 수를 계산
+            max_kill = max(kill_vertical(i, j, M), kill_diagonal(i, j, M))
+            if result < max_kill:
+                result = max_kill
+
+    print(f'#{tc} {result}')
+
 
 
 
