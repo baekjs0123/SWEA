@@ -1,0 +1,26 @@
+icp = {"+": 1, "-": 1, "*": 2, "/": 2, "(": 3}
+# 스택 안에 있을때 우선순위
+isp = {"+": 1, "-": 1, "*": 2, "/": 2, "(": 0}
+
+for tc in range(1, 11):
+    N = int(input())
+    infix = input()
+    postfix = ''
+    stack = []
+    for i in range(N):
+        if infix[i] not in '(+-*/)':
+            postfix += infix[i]
+        else:
+            if infix[i] == ')':
+                while stack:
+                    op = stack.pop()
+                    if op == '(':
+                        break
+
+                    postfix += op
+            else:
+                while stack and isp[stack[-1]] >= icp[infix[i]]:
+                    postfix += stack.pop()
+                stack.append(infix[i])
+    while stack:
+        postfix += stack.pop()
