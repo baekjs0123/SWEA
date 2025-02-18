@@ -24,3 +24,26 @@ for tc in range(1, 11):
                 stack.append(infix[i])
     while stack:
         postfix += stack.pop()
+    # print(postfix)
+    stack = []
+    for token in postfix:
+        if token not in '+-*/':
+            stack.append(int(token))
+        else:
+            right = stack.pop()
+            left = stack.pop()
+
+            result = 0
+
+            if token == '+':
+                result = left + right
+            elif token == '-':
+                result = left - right
+            elif token == '*':
+                result = left * right
+            elif token == '/':
+                result = left / right
+
+            stack.append(result)
+    result = stack.pop()
+    print(f'#{tc} {result}')
