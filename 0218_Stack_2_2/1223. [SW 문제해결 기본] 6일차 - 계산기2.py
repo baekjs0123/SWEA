@@ -1,6 +1,6 @@
-icp = {"+": 1, "-": 1, "*": 2, "/": 2, "(": 3}
+icp = {"+": 1, "*": 2}
 # 스택 안에 있을때 우선순위
-isp = {"+": 1, "-": 1, "*": 2, "/": 2, "(": 0}
+isp = {"+": 1, "*": 2}
 
 for tc in range(1, 11):
     N = int(input())
@@ -8,7 +8,7 @@ for tc in range(1, 11):
     postfix = ''
     stack = []
     for i in range(N):
-        if infix[i] not in '(+-*/)':
+        if infix[i] not in '(+*)':
             postfix += infix[i]
         else:
             if infix[i] == ')':
@@ -27,7 +27,7 @@ for tc in range(1, 11):
     # print(postfix)
     stack = []
     for token in postfix:
-        if token not in '+-*/':
+        if token not in '+*':
             stack.append(int(token))
         else:
             right = stack.pop()
@@ -37,12 +37,8 @@ for tc in range(1, 11):
 
             if token == '+':
                 result = left + right
-            elif token == '-':
-                result = left - right
             elif token == '*':
                 result = left * right
-            elif token == '/':
-                result = left / right
 
             stack.append(result)
     result = stack.pop()
