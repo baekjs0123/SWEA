@@ -7,18 +7,19 @@ def greedy(deck, player):
     global winner
     # 카운트 세기
     cnt_arr = [0] * 10
-    N = len(cnt_arr)
+
     for i in deck:
         cnt_arr[i] += 1
     # 카운트를 통해 run or triplet 판단
     for i in range(len(cnt_arr)):
         if cnt_arr[i] >= 3:
             winner = player
-            return winner
-        if i + 2 < N and cnt_arr[i] >= 1 and cnt_arr[i + 1] >= 1 and cnt_arr[i + 2] >= 1:
+            return
+        if i + 2 < len(cnt_arr) and cnt_arr[i] >= 1 and cnt_arr[i + 1] >= 1 and cnt_arr[i + 2] >= 1:
             winner = player
-            return winner
+            return
     return
+
 
 T = int(input())
 for tc in range(1, T + 1):
@@ -37,8 +38,8 @@ for tc in range(1, T + 1):
     # 6개의 카드를 골라야 하므로 턴은 최대 6번 진행
     while turn < 6:
         # 카드 잘 나눠서 분배
-        player1.append(cards[turn])
-        player2.append(cards[turn + 1])
+        player1.append(cards[turn * 2])
+        player2.append(cards[turn * 2 + 1])
 
         # run 또는 triplet을 확인하려면 최소 카드 3장 필요
         if turn >= 3:
