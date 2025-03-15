@@ -1,5 +1,5 @@
-# import sys
-# sys.stdin = open('input.txt', 'r')
+import sys
+sys.stdin = open('input.txt', 'r')
 
 def hex_to_demical(hex_num):
     hex_digits = '0123456789ABCDEF'
