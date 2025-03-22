@@ -9,11 +9,11 @@ sys.stdin = open('input.txt', 'r')
 
 3. 만약 있는 자석중에 회전하지 않는 자석이 있다면 그 뒤에 모든 자석은 회전하지 않는다.
 
-4. 모든 회전이 끝난 후 magnetism[i][0] 이 N극이면 0점, S극이면 각 자석마다 1, 2, 4, 8점을 획득한다.
+4. 모든 회전이 끝난 후 magnetism[i][0] 이 N극이면 0점, S극이면 각 ¡자석마다 1, 2, 4, 8점을 획득한다.
 '''
 T = int(input())
 for tc in range(1, T + 1):
-    K = int(input())
+    K = int(input()) # 자석을 회전시키는 횟수
     magnet_info = [list(map(int, input().split())) for _ in range(4)]
     for i in range(K):
         magnet_num, spin_dir = map(int, input().split())
@@ -31,36 +31,56 @@ for tc in range(1, T + 1):
                 else:
                     check.append(0)
         if check[magnet_num]:
+            if spin_dir == 1:
+                magnet_info[magnet_num].insert(0, magnet_info[magnet_num].pop())
+            else:
+                magnet_info[magnet_num].insert(-1, magnet_info[magnet_num].pop(0))
             if magnet_num % 2 == 1:
                 odd_even = 'odd'
             else:
                 odd_even = 'even'
-            if spin_dir == 1:
-                magnet_info[magnet_num].insert(0, magnet_info[magnet_num].pop())
-                for k in range(4):
-                    if k == magnet_num:
-                        continue
-                    if odd_even == 'odd' and k % 2 == 1:
-                        magnet_info[k].insert(0, magnet_info[k].pop())
-                    elif odd_even == 'odd' and k % 2 == 0:
-                        magnet_info[k].insert(-1, magnet_info[k].pop(0))
-                    if odd_even == 'even' and k % 2 == 0:
-                        magnet_info[k].insert(0, magnet_info[k].pop())
-                    elif odd_even == 'even' and k % 2 == 1:
-                        magnet_info[k].insert(-1, magnet_info[k].pop(0))
-            else:
-                magnet_info[magnet_num].insert(-1, magnet_info[magnet_num].pop(0))
-                for k in range(4):
-                    if k == magnet_num:
-                        continue
-                    if odd_even == 'odd' and k % 2 == 1:
-                        magnet_info[k].insert(-1, magnet_info[k].pop(0))
-                    elif odd_even == 'odd' and k % 2 == 0:
-                        magnet_info[k].insert(0, magnet_info[k].pop())
-                    if odd_even == 'even' and k % 2 == 0:
-                        magnet_info[k].insert(-1, magnet_info[k].pop(0))
-                    elif odd_even == 'even' and k % 2 == 1:
-                        magnet_info[k].insert(0, magnet_info[k].pop())
+            for check_i in range(4):
+                if check_i == magnet_num:
+                    continue
+                if check[check_i] == 1:
+                    if odd_even == 'odd' and check_i % 2 == 1:
+                        if spin_dir == 1:
+                            magnet_info[check_i].insert(0, magnet_info[check_i].pop())
+                        else:
+                            magnet_info[check_i].insert(-1, magnet_info[check_i].pop(0))
+                    elif odd_even == 'even' and check_i % 2 == 1:
+                        if spin_dir == 1:
+                            magnet_info[check_i].insert(0, magnet_info[check_i].pop())
+                        else:
+                            magnet_info[check_i].insert(-1, magnet_info[check_i].pop(0))
+
+
+            # if spin_dir == 1:
+            #     magnet_info[magnet_num].insert(0, magnet_info[magnet_num].pop())
+            #     for k in range(4):
+            #         if k == magnet_num:
+            #             continue
+            #         if odd_even == 'odd' and k % 2 == 1:
+            #             magnet_info[k].insert(0, magnet_info[k].pop())
+            #         elif odd_even == 'odd' and k % 2 == 0:
+            #             magnet_info[k].insert(-1, magnet_info[k].pop(0))
+            #         if odd_even == 'even' and k % 2 == 0:
+            #             magnet_info[k].insert(0, magnet_info[k].pop())
+            #         elif odd_even == 'even' and k % 2 == 1:
+            #             magnet_info[k].insert(-1, magnet_info[k].pop(0))
+            # else:
+            #     magnet_info[magnet_num].insert(-1, magnet_info[magnet_num].pop(0))
+            #     for k in range(4):
+            #         if k == magnet_num:
+            #             continue
+            #         if odd_even == 'odd' and k % 2 == 1:
+            #             magnet_info[k].insert(-1, magnet_info[k].pop(0))
+            #         elif odd_even == 'odd' and k % 2 == 0:
+            #             magnet_info[k].insert(0, magnet_info[k].pop())
+            #         if odd_even == 'even' and k % 2 == 0:
+            #             magnet_info[k].insert(-1, magnet_info[k].pop(0))
+            #         elif odd_even == 'even' and k % 2 == 1:
+            #             magnet_info[k].insert(0, magnet_info[k].pop())
 
     total_score = 0
     for i in range(4):
